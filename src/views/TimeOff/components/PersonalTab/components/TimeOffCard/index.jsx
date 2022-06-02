@@ -30,36 +30,36 @@ const TimeOffCard = (props) => {
   const start = pagination.page * pagination.pageSize;
 
   return (
-    <div data-testid={ "card-time-off-view-component" }>
+    <div data-testid={"card-time-off-view-component"}>
       {data?.slice(start, start + pagination.pageSize)?.map((item) => (
-        <StyledRootContainer key={ item.starting_date }>
+        <StyledRootContainer key={item.starting_date}>
           <StyledCardContentContainer>
             <StyledCardFont>
               <StyledCalendarGrid>
-                <CalendarTodayIcon fontSize={ SIZE.small } />
+                <CalendarTodayIcon fontSize={SIZE.small} />
                 <p>{item.starting_date}</p>
-                <CalendarTodayIcon fontSize={ SIZE.small } />
+                <CalendarTodayIcon fontSize={SIZE.small} />
                 <p>{item.ending_date}</p>
               </StyledCalendarGrid>
               <StyledTimeOffType>
-                <DeckIcon fontSize={ SIZE.small } />
+                <DeckIcon fontSize={SIZE.small} />
                 {item.time_off_type?.name}
               </StyledTimeOffType>
               <StyledMotive>
-                <QuestionAnswerIcon fontSize={ SIZE.small } />
+                <QuestionAnswerIcon fontSize={SIZE.small} />
                 {` ${t("common.motive")}:`}
               </StyledMotive>
               <StyledReason>
                 {item.reason}
               </StyledReason>
               <StyledLeader>
-                <DragHandleIcon fontSize={ SIZE.small } />
+                <DragHandleIcon fontSize={SIZE.small} />
                 {t(`timeOff:states.${item.state}`)}
               </StyledLeader>
             </StyledCardFont>
             <StyledHr />
-            <StyledCardButton justify={ ALIGN_ITEMS.flexEnd } >
-              { getOptions(item) }
+            <StyledCardButton justify={ALIGN_ITEMS.flexEnd} >
+              {item.state === "pending" && getOptions(item)}
             </StyledCardButton>
           </StyledCardContentContainer>
         </StyledRootContainer>
@@ -67,12 +67,12 @@ const TimeOffCard = (props) => {
       {!isLoading && (isEmpty(data) ? <NoDataMessage />
         : (pagination && data?.length >= PAGINATION.maxPerPage) && (
           <TablePagination
-            component={ COMPONENT.div }
-            count={ data?.length }
-            rowsPerPage={ pagination.pageSize }
-            page={ pagination.page }
-            onChangePage={ pagination.handlePageChange }
-            rowsPerPageOptions={ [] }
+            component={COMPONENT.div}
+            count={data?.length}
+            rowsPerPage={pagination.pageSize}
+            page={pagination.page}
+            onChangePage={pagination.handlePageChange}
+            rowsPerPageOptions={[]}
           />
         ))}
     </div>
@@ -90,7 +90,7 @@ TimeOffCard.defaultProps = {
   data: [],
   pagination: {},
   isLoading: false,
-  getOptions: () => {},
+  getOptions: () => { },
 };
 
 export default TimeOffCard;
