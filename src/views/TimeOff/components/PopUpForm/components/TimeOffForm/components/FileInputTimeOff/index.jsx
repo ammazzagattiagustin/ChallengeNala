@@ -14,28 +14,27 @@ const FileInputTimeOff = (props) => {
     control, updateFiles, files, removeFile, lastFiles,
   } = props;
   const { t } = useTranslation(["common"]);
-
   return (
-    <div data-testid={ "file-input-time-off-view-component" }>
+    <div data-testid={"file-input-time-off-view-component"}>
       <StyledBoxLabel>
-        <img alt={ "upload file" } src={ uploadImg } />
+        <img alt={"upload file"} src={uploadImg} />
         <StyledBoldLabel>{t("common.upload_file")}</StyledBoldLabel>
       </StyledBoxLabel>
-      { lastFiles }
+      {lastFiles}
       <InputForm
-        type={ INPUT_TYPE.file }
-        control={ control }
-        name={ "attatchment" }
-        text={ files?.length ? `${files?.length} ${t("common.files_selected")}` : t("common.select_file") }
-        onChange={ (event) => updateFiles(event.target) }
-        variant={ VARIANT.outlined }
-        typeStyle={ BUTTON_STYLE_TYPES.outlined }
+        type={INPUT_TYPE.file}
+        control={control}
+        name={"attatchment"}
+        text={files?.length ? `${files?.length} ${t("common.files_selected")}` : t("common.select_file")}
+        onChange={(event) => updateFiles(event.target)}
+        variant={VARIANT.outlined}
+        typeStyle={BUTTON_STYLE_TYPES.outlined}
       />
       <div>
         {files?.map((file) => (
-          <StyledParagraph key={ file.lastModified } onClick={ () => removeFile(file.name) }>
+          <StyledParagraph key={file.lastModified} onClick={() => removeFile(file.name)}>
             <StyledParagraph>{file.name}</StyledParagraph>
-            <StyledIcon color={ theme.error.main }>
+            <StyledIcon color={theme.error.main}>
               <DeleteOutlinedIcon />
             </StyledIcon>
           </StyledParagraph>

@@ -41,6 +41,25 @@ const TimeOffForm = (props) => {
 
   const [files, setFiles] = useState([]);
 
+
+  const urlToFile = async (url) => {
+    const name = url.substring(url.lastIndexOf('/') + 1);
+    const response = await fetch(url);
+    const blob = await response.blob()
+    return new File([blob], name, { type: blob.type });
+  };
+
+  const createPreviousFiles = (previousFiles) => {
+    const files = []
+    previousFiles.forEach(async (fileUrl) => {
+      const file = await urlToFile(fileUrl)
+      files.push(file)
+    })
+    return files;
+  }
+
+  const [oldFiles] = useState(createPreviousFiles(data?.files_url))
+
   const {
     handleSubmit,
     control,
@@ -97,6 +116,8 @@ const TimeOffForm = (props) => {
     formData.append("time_off[reason]", form.reason);
     formData.append("time_off[time_off_type_id]", form.time_off_type_id);
 
+    oldFiles.forEach((element) => formData.append("time_off[files][]", element));
+
     if (data?.id) {
       dispatch(update(data.id, formData, true));
     } else {
@@ -106,79 +127,79 @@ const TimeOffForm = (props) => {
   };
 
   const lastFiles = (filesList) => filesList.map((item) => (
-    <StyledItem key={ item.title }>
-      <Link href={ item } target={ TARGET.blank }>
-        { getFileName(item) }
+    <StyledItem key={item.title}>
+      <Link href={item} target={TARGET.blank}>
+        {getFileName(item)}
       </Link>
     </StyledItem>
   ));
 
   return (
-    <form data-testid={ "time-off-form-view-component" } onSubmit={ handleSubmit(onSubmit) }>
-      <Grid container direction={ DIRECTION.column } spacing={ 5 }>
-        <Grid item container direction={ DIRECTION.row } spacing={ 4 }>
-          <Grid item xs={ 12 } md={ 6 }>
+    <form data-testid={"time-off-form-view-component"} onSubmit={handleSubmit(onSubmit)}>
+      <Grid container direction={DIRECTION.column} spacing={5}>
+        <Grid item container direction={DIRECTION.row} spacing={4}>
+          <Grid item xs={12} md={6}>
             <DateInputController
-              control={ control }
-              label={ t("common.from") }
-              name={ "starting_date" }
-              value={ today }
-              customStyles={ classes.dateInputs }
+              control={control}
+              label={t("common.from")}
+              name={"starting_date"}
+              value={today}
+              customStyles={classes.dateInputs}
             />
             <DateInputController
-              control={ control }
-              label={ t("common.to") }
-              name={ "ending_date" }
-              minDate={ watchFromDate }
-              value={ today }
-              customStyles={ classes.dateInputs }
+              control={control}
+              label={t("common.to")}
+              name={"ending_date"}
+              minDate={watchFromDate}
+              value={today}
+              customStyles={classes.dateInputs}
             />
           </Grid>
-          <Grid item xs={ 12 } md={ 6 }>
+          <Grid item xs={12} md={6}>
             <SelectController
-              control={ control }
-              menuItems={ selectOptions }
-              defaultValue={ VARIANT.default }
-              name={ "time_off_type_id" }
-              id={ "time_off_type_id" }
+              control={control}
+              menuItems={selectOptions}
+              defaultValue={VARIANT.default}
+              name={"time_off_type_id"}
+              id={"time_off_type_id"}
             />
           </Grid>
         </Grid>
-        <Grid item container spacing={ 3 }>
-          <Grid item xs={ 12 }>
+        <Grid item container spacing={3}>
+          <Grid item xs={12}>
             <InputForm
-              type={ INPUT_TYPE.text }
-              control={ control }
-              placeholder={ t("common.write_description") }
-              name={ "reason" }
-              label={ `${t("common.reason")} (optional)` }
-              multiline={ 4 }
+              type={INPUT_TYPE.text}
+              control={control}
+              placeholder={t("common.write_description")}
+              name={"reason"}
+              label={`${t("common.reason")} (optional)`}
+              multiline={4}
             />
           </Grid>
-          <StyledFileGrid isMobile={ isMobile } item xs={ 12 }>
+          <StyledFileGrid isMobile={isMobile} item xs={12}>
             <FileInputTimeOff
-              control={ control }
-              onChangeFile={ onChangeFile }
-              files={ files }
-              updateFiles={ updateFiles }
-              removeFile={ removeFile }
-              lastFiles={ lastFiles(data?.files_url || []) }
+              control={control}
+              onChangeFile={onChangeFile}
+              files={files}
+              updateFiles={updateFiles}
+              removeFile={removeFile}
+              lastFiles={lastFiles(data?.files_url || [])}
             />
           </StyledFileGrid>
           <StyledSubmitGrid
             item
-            sm={ 12 }
+            sm={12}
             container
-            direction={ DIRECTION.row }
-            alignItems={ ALIGN_ITEMS.center }
+            direction={DIRECTION.row}
+            alignItems={ALIGN_ITEMS.center}
           >
             <Button
-              variant={ VARIANT.contained }
-              type={ BUTTON_TYPE.submit }
-              typeStyle={ BUTTON_TYPE.submit }
-              size={ SIZE.medium }
-              isLoading={ isLoadingProcess }
-              isDisabled={ watchSelect === VARIANT.default }
+              variant={VARIANT.contained}
+              type={BUTTON_TYPE.submit}
+              typeStyle={BUTTON_TYPE.submit}
+              size={SIZE.medium}
+              isLoading={isLoadingProcess}
+              isDisabled={watchSelect === VARIANT.default}
             >
               {t("common.send_request")}
             </Button>
